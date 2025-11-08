@@ -20,11 +20,11 @@ export default function Login() {
 
   return (
     <div className="card">
-      <h2>Login</h2>
+      <h2>Sign In</h2>
       <form onSubmit={handleSubmit}>
         <input placeholder="Username" value={username} onChange={e => setUsername(e.target.value)} />
-        <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} />
-        <button>Login</button>
+        <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} /><br></br>
+        <div className="loginbut"><button className="Login-buthp">Sign In</button></div>
       </form>
     </div>
   );

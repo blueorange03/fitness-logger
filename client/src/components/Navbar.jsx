@@ -11,10 +11,10 @@ export default function Navbar() {
       <div className="logo">Fitness Logger</div>
 
       <div className="links">
-        <button onClick={() => navigate("/dashboard")}>Dashboard</button>
-        <button onClick={() => navigate("/log")}>Log</button>
-        <button onClick={() => navigate("/workouts")}>Workouts</button>
-        <button onClick={() => navigate("/profile")}>Profile</button>
+        <button id="1" onClick={() => navigate("/dashboard")}>Dashboard</button>
+        <button id="2" onClick={() => navigate("/log")}>Log</button>
+        <button id="3" onClick={() => navigate("/workouts")}>Workouts</button>
+        <button id="4" onClick={() => navigate("/profile")}>Profile</button>
         <button
           onClick={() => {
             logout();

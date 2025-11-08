@@ -1,6 +1,6 @@
 body {
   font-family: "Poppins", sans-serif;
-  background: #f9fafb;
+  background: #222831;
   margin: 0;
   padding: 0;
 }
@@ -12,43 +12,55 @@ body {
 }
 
 .navbar {
-  background: #111827;
-  color: white;
+  background: #222831;
+  color: #DFD0B8;
   display: flex;
   justify-content: space-between;
   padding: 12px 20px;
 }
 
 .navbar a {
-  color: white;
+  color: #dfd0b8;
   text-decoration: none;
-  margin-right: 15px;
+  margin-right: 15; 
 }
 
 .card {
-  background: white;
+  background: #222831;
   padding: 20px;
-  margin: 20px auto;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin: 50px auto;
+}
+
+h2{
+  margin-left: 300px;
+  color: #DFD0B8;
 }
 
 input {
-  width: 100%;
+  text-align: center;
+  width: 75%;
   padding: 10px;
   margin-bottom: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #000000;
+  background-color: #DFD0B8;
   border-radius: 6px;
 }
 
 button {
-  background: #3b82f6;
-  color: white;
+  background: #dfd0b8;
+  color: black;
   border: none;
   border-radius: 6px;
   padding: 10px 16px;
   cursor: pointer;
+  margin: 3px;
 }
 button:hover {
-  background: #2563eb;
+  background: #948979;
+  color: #222831;
+}
+
+.loginbut{
+  position: relative;
+  margin-left: 300px;
 }
