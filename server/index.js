@@ -113,19 +113,52 @@ app.post("/api/auth/logout", (req, res) => {
 });
 
 // --- Workout routes ---
-app.post("/api/workouts", auth, async (req, res) => {
-  const workout = { ...req.body, userId: req.user._id, date: new Date() };
-  await db.collection("workouts").insertOne(workout);
-  res.json({ success: true });
+// --- Get all workouts for the logged-in user ---
+app.get("/api/workouts", auth, async (req, res) => {
+  try {
+    const workouts = await db
+      .collection("workouts")
+      .find({ userId: req.user._id })
+      .sort({ date: -1 })
+      .toArray();
+
+    res.json({ workouts });
+  } catch (err) {
+    console.error("Error fetching workouts:", err);
+    res.status(500).json({ message: "Failed to fetch workouts" });
+  }
 });
 
-app.get("/api/workouts", auth, async (req, res) => {
-  const workouts = await db.collection("workouts")
-    .find({ userId: req.user._id })
-    .sort({ date: -1 })
-    .toArray();
-  res.json({ workouts });
+// --- Add new workout ---
+app.post("/api/workouts", auth, async (req, res) => {
+  try {
+    const { category, exercises, date, duration } = req.body;
+    console.log("📥 Received workout data:", req.body);
+
+    if (!category || !exercises || !date) {
+      return res.status(400).json({ message: "Missing fields" });
+    }
+
+    const workout = {
+      userId: req.user._id,
+      category,
+      exercises,
+      date: new Date(date),      // <-- ✅ convert date string to real Date object
+      duration: duration || "60 min",
+      createdAt: new Date(),
+    };
+
+    const result = await db.collection("workouts").insertOne(workout);
+    console.log("Workout inserted with ID:", result.insertedId);
+
+    res.json({ success: true, id: result.insertedId });
+  } catch (err) {
+    console.error("Error saving workout:", err);
+    res.status(500).json({ message: "Server error" });
+  }
 });
+
+
 
 // Start server
 app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));

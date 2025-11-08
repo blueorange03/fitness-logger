@@ -64,3 +64,102 @@ button:hover {
   position: relative;
   margin-left: 300px;
 }
+
+
+.month-counter {
+  text-align: center;
+  font-size: 1.1rem;
+  background: #1f2937;
+  color: #3b82f6;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.log-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+label {
+  font-weight: 600;
+  color: #d1d5db;
+}
+
+select,
+input[type="text"],
+input[type="date"],
+input[type="number"] {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #3b82f6;
+  background-color: #111827;
+  color: white;
+}
+
+select:focus,
+input:focus {
+  outline: none;
+  border-color: #60a5fa;
+  box-shadow: 0 0 6px #3b82f6;
+}
+
+.exercise-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.exercise-row input {
+  flex: 1;
+}
+
+.add-btn {
+  background: transparent;
+  border: 1px dashed #3b82f6;
+  color: #3b82f6;
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.add-btn:hover {
+  background: #3b82f6;
+  color: white;
+}
+
+.remove-btn {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 6px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.remove-btn:hover {
+  background: #dc2626;
+}
+
+.btn-container {
+  display: flex;
+  justify-content: center;
+}
+
+.btn-container button {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-container button:hover {
+  background: #2563eb;
+  transform: scale(1.05);
+}
