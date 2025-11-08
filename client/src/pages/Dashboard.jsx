@@ -1,15 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import api from '../api';
+import React, { useEffect, useState } from "react";
+import api from "../api";
 
 export default function Dashboard() {
   const [workouts, setWorkouts] = useState([]);
+
   useEffect(() => {
-    api.get('/workouts').then(res => setWorkouts(res.data.workouts || []));
+    api.get("/workouts").then(res => setWorkouts(res.data.workouts || []));
   }, []);
+
   return (
-    <div>
+    <div className="card">
       <h2>Dashboard</h2>
-      <p>Total workouts: {workouts.length}</p>
+      <p>Total Workouts: {workouts.length}</p>
+      <ul>
+        {workouts.slice(0, 3).map((w, i) => (
+          <li key={i}>{w.type || "Workout"} - {new Date(w.createdAt).toLocaleString()}</li>
+        ))}
+      </ul>
     </div>
   );
 }

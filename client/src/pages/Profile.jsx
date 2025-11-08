@@ -1,10 +1,10 @@
-import React, { useContext } from 'react';
-import AuthContext from '../context/AuthContext';
+import React, { useContext } from "react";
+import AuthContext from "../context/AuthContext";
 
 export default function Profile() {
   const { user } = useContext(AuthContext);
   return (
-    <div>
+    <div className="card">
       <h2>Profile</h2>
       {user ? (
         <>
@@ -12,9 +12,7 @@ export default function Profile() {
           <p>SRN: {user.srn}</p>
           <p>Branch: {user.branch}</p>
         </>
-      ) : (
-        <p>Loading...</p>
-      )}
+      ) : <p>Loading...</p>}
     </div>
   );
 }
