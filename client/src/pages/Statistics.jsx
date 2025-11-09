@@ -1,14 +1,25 @@
 import React, { useEffect, useState } from "react";
 import api from "../api";
 import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, Legend, ResponsiveContainer,
-  PieChart, Pie, Cell
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  Legend,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  LineChart,
+  Line,
 } from "recharts";
 
 export default function Statistics() {
   const [workouts, setWorkouts] = useState([]);
   const [monthFilter, setMonthFilter] = useState(new Date().getMonth()); // current month
-  const [view, setView] = useState("category"); // "category" or "frequency"
+  const [view, setView] = useState("category"); // "category" | "frequency" | "duration"
 
   useEffect(() => {
     async function fetchData() {
@@ -18,44 +29,135 @@ export default function Statistics() {
     fetchData();
   }, []);
 
-  // Filter workouts for the selected month
-  const filtered = workouts.filter(w => {
-    const d = new Date(w.date);
+  // 🧠 Filter workouts for the selected month
+  const filtered = workouts.filter((w) => {
+    const d = new Date(w.startTime);
     return d.getMonth() === monthFilter;
   });
 
-  // Group by category (e.g., Upper, Legs, Pull)
+  // 🧩 By Category — how many workouts per category
   const categoryCount = filtered.reduce((acc, w) => {
     acc[w.category] = (acc[w.category] || 0) + 1;
     return acc;
   }, {});
-
-  // Convert to chart data format
-  const data = Object.entries(categoryCount).map(([key, value]) => ({
+  const categoryData = Object.entries(categoryCount).map(([key, value]) => ({
     category: key,
-    count: value
+    count: value,
   }));
 
-  // Weekly frequency chart
+  // 🧩 Weekly Frequency — how many workouts per week
   const weekCount = filtered.reduce((acc, w) => {
-    const week = Math.ceil(new Date(w.date).getDate() / 7);
+    const d = new Date(w.startTime);
+    const week = Math.ceil(d.getDate() / 7);
     acc[week] = (acc[week] || 0) + 1;
     return acc;
   }, {});
-
   const weekData = Object.entries(weekCount).map(([week, count]) => ({
     week: `Week ${week}`,
-    count
+    count,
   }));
 
-  const COLORS = ["#3b82f6", "#60a5fa", "#10b981", "#facc15", "#ef4444"];
+  // 🧩 Weekly Duration — total minutes per week
+  const weekDuration = filtered.reduce((acc, w) => {
+    const d = new Date(w.startTime);
+    const week = Math.ceil(d.getDate() / 7);
+    acc[week] = (acc[week] || 0) + (w.duration || 0);
+    return acc;
+  }, {});
+  const durationData = Object.entries(weekDuration).map(([week, minutes]) => ({
+    week: `Week ${week}`,
+    minutes,
+  }));
+
+  const COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#14b8a6"];
+
+  // 🧩 Dynamic chart rendering
+  const renderChart = () => {
+    switch (view) {
+      case "category":
+        return (
+          <ResponsiveContainer width="100%" height={350}>
+            <PieChart>
+              <Pie
+                data={categoryData}
+                dataKey="count"
+                nameKey="category"
+                outerRadius={120}
+                label
+              >
+                {categoryData.map((entry, index) => (
+                  <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip />
+              <Legend />
+            </PieChart>
+          </ResponsiveContainer>
+        );
+
+      case "frequency":
+        return (
+          <ResponsiveContainer width="100%" height={350}>
+            <BarChart data={weekData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="week" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="count" fill="#3b82f6" name="Workouts" />
+            </BarChart>
+          </ResponsiveContainer>
+        );
+
+      case "duration":
+        return (
+          <ResponsiveContainer width="100%" height={350}>
+            <LineChart data={durationData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="week" />
+              <YAxis label={{ value: "Minutes", angle: -90, position: "insideLeft" }} />
+              <Tooltip />
+              <Legend />
+              <Line
+                type="monotone"
+                dataKey="minutes"
+                stroke="#10b981"
+                strokeWidth={2}
+                dot={{ r: 4 }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        );
+
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className="card">
-      <h2>Workout Statistics</h2>
+      <h2 style={{ textAlign: "center" }}>🏋️ Workout Statistics</h2>
 
-      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 20 }}>
-        <select value={monthFilter} onChange={e => setMonthFilter(parseInt(e.target.value))}>
+      {/* Filter Controls */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginBottom: 20,
+          flexWrap: "wrap",
+          gap: "10px",
+        }}
+      >
+        {/* Month Selector */}
+        <select
+          value={monthFilter}
+          onChange={(e) => setMonthFilter(parseInt(e.target.value))}
+          style={{
+            padding: "6px 12px",
+            borderRadius: "6px",
+            border: "1px solid #ccc",
+          }}
+        >
           {Array.from({ length: 12 }, (_, i) => (
             <option key={i} value={i}>
               {new Date(2025, i).toLocaleString("default", { month: "long" })}
@@ -63,42 +165,27 @@ export default function Statistics() {
           ))}
         </select>
 
-        <select value={view} onChange={e => setView(e.target.value)}>
-          <option value="category">By Category</option>
-          <option value="frequency">Weekly Frequency</option>
+        {/* Chart View Selector */}
+        <select
+          value={view}
+          onChange={(e) => setView(e.target.value)}
+          style={{
+            padding: "6px 12px",
+            borderRadius: "6px",
+            border: "1px solid #ccc",
+          }}
+        >
+          <option value="category">By Category (Pie)</option>
+          <option value="frequency">Weekly Frequency (Bar)</option>
+          <option value="duration">Weekly Duration (Line)</option>
         </select>
       </div>
 
-      {view === "category" ? (
-        <ResponsiveContainer width="100%" height={300}>
-          <PieChart>
-            <Pie
-              data={data}
-              dataKey="count"
-              nameKey="category"
-              outerRadius={120}
-              fill="#8884d8"
-              label
-            >
-              {data.map((entry, index) => (
-                <Cell key={index} fill={COLORS[index % COLORS.length]} />
-              ))}
-            </Pie>
-            <Tooltip />
-            <Legend />
-          </PieChart>
-        </ResponsiveContainer>
+      {/* Charts */}
+      {filtered.length === 0 ? (
+        <p style={{ textAlign: "center" }}>No data available for this month.</p>
       ) : (
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={weekData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="week" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="count" fill="#3b82f6" name="Workouts" />
-          </BarChart>
-        </ResponsiveContainer>
+        renderChart()
       )}
     </div>
   );

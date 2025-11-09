@@ -4,26 +4,52 @@ import { useNavigate } from "react-router-dom";
 
 export default function LogWorkout() {
   const [category, setCategory] = useState("");
-  const [date, setDate] = useState("");
-  const [duration, setDuration] = useState("");
-  const [exercises, setExercises] = useState([{ name: "", sets: "" }]);
-  const [monthCount, setMonthCount] = useState(0);
+  const [exercises, setExercises] = useState([
+    { name: "", sets: "", reps: "", weight: "" },
+  ]);
+  const [startTime, setStartTime] = useState(null);
+  const [duration, setDuration] = useState(0);
+  const [isRunning, setIsRunning] = useState(false);
   const navigate = useNavigate();
 
+  // Update timer
   useEffect(() => {
-    async function fetchMonthlyCount() {
-      const res = await api.get("/workouts");
-      const workouts = res.data.workouts || [];
-      const currentMonth = new Date().getMonth();
-      const days = new Set(
-        workouts
-          .filter(w => new Date(w.date).getMonth() === currentMonth)
-          .map(w => new Date(w.date).toDateString())
-      );
-      setMonthCount(days.size);
+    let interval;
+    if (isRunning && startTime) {
+      interval = setInterval(() => {
+        const diff = Math.floor((Date.now() - new Date(startTime)) / 60000);
+        setDuration(diff);
+      }, 1000);
     }
-    fetchMonthlyCount();
-  }, []);
+    return () => clearInterval(interval);
+  }, [isRunning, startTime]);
+
+  const handleStart = () => {
+    setStartTime(new Date());
+    setIsRunning(true);
+  };
+
+  const handleStop = async () => {
+    const endTime = new Date();
+    setIsRunning(false);
+
+    if (!category) return alert("Please select a category");
+    if (exercises.some((ex) => !ex.name)) return alert("Enter all exercise names");
+
+    try {
+      await api.post("/workouts", {
+        category,
+        exercises,
+        startTime,
+        endTime,
+      });
+      alert("✅ Workout saved successfully!");
+      navigate("/workouts");
+    } catch (err) {
+      console.error("❌ Failed to save:", err.response?.data || err.message);
+      alert("Failed to save workout");
+    }
+  };
 
   const handleExerciseChange = (index, field, value) => {
     const updated = [...exercises];
@@ -32,98 +58,77 @@ export default function LogWorkout() {
   };
 
   const addExercise = () => {
-    setExercises([...exercises, { name: "", sets: "" }]);
-  };
-
-  const removeExercise = (index) => {
-    const updated = exercises.filter((_, i) => i !== index);
-    setExercises(updated);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!category || !date || exercises.some(e => !e.name || !e.sets)) {
-      alert("Please fill all fields properly.");
-      return;
-    }
-
-    await api.post("/workouts", {
-      category,
-      exercises: exercises.map(e => `${e.sets}x ${e.name}`),
-      date,
-      duration: duration || "60 min"
-    });
-
-    navigate("/workouts");
+    setExercises([...exercises, { name: "", sets: "", reps: "", weight: "" }]);
   };
 
   return (
     <div className="card">
-      <h2>Log Workout</h2>
+      <h2>🏋️ Log Workout</h2>
 
-      <div className="month-counter">
-        <strong>{monthCount}</strong> workout days this month 💪
-      </div>
+      <label>Workout Category</label>
+      <select
+        value={category}
+        onChange={(e) => setCategory(e.target.value)}
+        style={{ width: "100%", padding: "8px", marginBottom: "15px" }}
+      >
+        <option value="">-- Select Category --</option>
+        <option value="Chest">Chest</option>
+        <option value="Back">Back</option>
+        <option value="Legs">Legs</option>
+        <option value="Arms">Arms</option>
+        <option value="Shoulders">Shoulders</option>
+        <option value="Cardio">Cardio</option>
+      </select>
 
-      <form className="log-form" onSubmit={handleSubmit}>
-        <label>Workout Category</label>
-        <select value={category} onChange={e => setCategory(e.target.value)}>
-          <option value="">-- Select --</option>
-          <option value="Upper">Upper</option>
-          <option value="Pull">Pull</option>
-          <option value="Push">Push</option>
-          <option value="Legs">Legs</option>
-          <option value="Cardio">Cardio</option>
-          <option value="Core">Core</option>
-        </select>
-
-        <label>Date</label>
-        <input type="date" value={date} onChange={e => setDate(e.target.value)} />
-
-        <label>Duration (optional)</label>
-        <input
-          type="text"
-          placeholder="e.g. 60 min"
-          value={duration}
-          onChange={e => setDuration(e.target.value)}
-        />
-
-        <label>Exercises</label>
-        {exercises.map((exercise, i) => (
-          <div key={i} className="exercise-row">
-            <input
-              type="text"
-              placeholder="Exercise name"
-              value={exercise.name}
-              onChange={e => handleExerciseChange(i, "name", e.target.value)}
-            />
-            <input
-              type="number"
-              placeholder="Sets"
-              value={exercise.sets}
-              onChange={e => handleExerciseChange(i, "sets", e.target.value)}
-              min="1"
-            />
-            {exercises.length > 1 && (
-              <button
-                type="button"
-                className="remove-btn"
-                onClick={() => removeExercise(i)}
-              >
-                ✕
-              </button>
-            )}
-          </div>
-        ))}
-
-        <button type="button" className="add-btn" onClick={addExercise}>
-          + Add Exercise
-        </button>
-
-        <div className="btn-container">
-          <button type="submit">Save Workout</button>
+      <h3>Exercises</h3>
+      {exercises.map((ex, i) => (
+        <div key={i} className="exercise-row">
+          <input
+            placeholder="Exercise name"
+            value={ex.name}
+            onChange={(e) => handleExerciseChange(i, "name", e.target.value)}
+          />
+          <input
+            type="number"
+            placeholder="Sets"
+            value={ex.sets}
+            onChange={(e) => handleExerciseChange(i, "sets", e.target.value)}
+          />
+          <input
+            type="number"
+            placeholder="Reps"
+            value={ex.reps}
+            onChange={(e) => handleExerciseChange(i, "reps", e.target.value)}
+          />
+          <input
+            type="number"
+            placeholder="Weight (kg)"
+            value={ex.weight}
+            onChange={(e) => handleExerciseChange(i, "weight", e.target.value)}
+          />
         </div>
-      </form>
+      ))}
+
+      <button type="button" onClick={addExercise} className="add-btn">
+        + Add Exercise
+      </button>
+
+      <div style={{ marginTop: "20px", textAlign: "center" }}>
+        {!isRunning ? (
+          <button className="start-btn" onClick={handleStart}>
+            ▶️ Start Workout
+          </button>
+        ) : (
+          <button className="stop-btn" onClick={handleStop}>
+            ⏹ Stop & Save Workout
+          </button>
+        )}
+        {isRunning && (
+          <p style={{ marginTop: "10px", fontWeight: "bold" }}>
+            Duration: {duration} min
+          </p>
+        )}
+      </div>
     </div>
   );
 }
