@@ -16,7 +16,6 @@ export default function Dashboard() {
     fetchWorkouts();
   }, []);
 
-  // Format date helper
   const formatDate = (dateString) => {
     if (!dateString) return "";
     return new Date(dateString).toLocaleDateString("en-GB", {

@@ -9,7 +9,7 @@ let db;
 async function connect() {
   if (!db) {
     await client.connect();
-    db = client.db(); // uses DB from URI path or default
+    db = client.db(); 
     console.log('Connected to MongoDB');
   }
   return db;

@@ -8,7 +8,6 @@ import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
 
-// This makes sure the path works even on Mac
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -21,7 +20,6 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 let db;
 
-// Middleware
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
@@ -29,7 +27,6 @@ app.use(cors({
   credentials: true,
 }));
 
-// Connect MongoDB
 async function connectDB() {
   const client = new MongoClient(process.env.MONGO_URI);
   await client.connect();
@@ -38,7 +35,6 @@ async function connectDB() {
 }
 connectDB().catch(console.error);
 
-// Utility: Auth middleware
 async function auth(req, res, next) {
   try {
     const token = req.cookies?.token || req.headers.authorization?.replace("Bearer ", "");
@@ -51,14 +47,10 @@ async function auth(req, res, next) {
   }
 }
 
-// 🔹 ROUTES
-
-// --- Test route ---
 app.get("/api/test", (req, res) => {
   res.json({ message: "Server working fine 🚀" });
 });
 
-// --- Auth routes ---
 app.post("/api/auth/login", async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -129,7 +121,6 @@ app.get("/api/workouts", auth, async (req, res) => {
   }
 });
 
-// --- Add new workout ---
 app.post("/api/workouts", auth, async (req, res) => {
   try {
     const { category, exercises, date, duration } = req.body;
@@ -143,7 +134,7 @@ app.post("/api/workouts", auth, async (req, res) => {
       userId: req.user._id,
       category,
       exercises,
-      date: new Date(date),      // <-- ✅ convert date string to real Date object
+      date: new Date(date),     
       duration: duration || "60 min",
       createdAt: new Date(),
     };

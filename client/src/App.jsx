@@ -8,6 +8,7 @@ import LogWorkout from "./pages/LogWorkout";
 import Workouts from "./pages/Workouts";
 import Profile from "./pages/Profile";
 import Routines from "./pages/Routines";
+import Statistics from "./pages/Statistics";
 
 export default function App() {
   return (
@@ -22,6 +23,7 @@ export default function App() {
           <Route path="/workouts" element={<ProtectedRoute><Workouts /></ProtectedRoute>} />
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           <Route path="/routines" element={<ProtectedRoute><Routines /></ProtectedRoute>} />
+          <Route path="/statistics" element={<ProtectedRoute><Statistics /></ProtectedRoute>}/>
         </Routes>
       </div>
     </>

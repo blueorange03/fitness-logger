@@ -1,4 +1,3 @@
-// server/controllers/workoutController.js
 const { connect } = require('../db');
 const { ObjectId } = require('mongodb');
 
@@ -6,7 +5,6 @@ async function createWorkout(req, res) {
   try {
     const db = await connect();
     const payload = req.body;
-    // minimal validation
     if (!payload || !payload.exercises) return res.status(400).json({ message: 'Invalid workout' });
 
     const doc = {

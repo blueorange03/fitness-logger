@@ -17,8 +17,10 @@ export function AuthProvider({ children }) {
   async function fetchUser() {
     try {
       const res = await api.get("/auth/me");
+      console.log("✅ fetchUser -> user:", res.data.user);
       dispatch({ type: "SET_USER", payload: res.data.user });
-    } catch {
+    } catch (err) {
+      console.error("fetchUser failed:", err?.response?.data || err.message);
       dispatch({ type: "LOGOUT" });
     }
   }
@@ -27,6 +29,7 @@ export function AuthProvider({ children }) {
 
   async function login(username, password) {
     await api.post("/auth/login", { username, password });
+    // fetchUser will set user and loading false (ensure cookie is set by backend)
     await fetchUser();
   }
 
