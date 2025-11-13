@@ -333,3 +333,73 @@ input:focus {
   padding: 25px;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
 }
+
+/* --- New Styles for Set-by-Set Logging in LogWorkout.jsx --- */
+
+.exercise-item-container {
+  /* Use the existing card class for a clean, contained look for each exercise */
+  /* Remove default card margin */
+  margin-bottom: 20px !important; 
+}
+
+.set-row-header {
+  display: grid;
+  grid-template-columns: 0.5fr 1fr 1fr 0.2fr; /* Set, Reps, Weight, Action */
+  gap: 10px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid var(--border-color);
+  align-items: center;
+}
+
+.set-row {
+  display: grid;
+  grid-template-columns: 0.5fr 1fr 1fr 0.2fr; /* Set, Reps, Weight, Action */
+  gap: 10px;
+  margin-bottom: 10px;
+  align-items: center;
+}
+
+.set-row input {
+  /* Style for input fields within a set row */
+  padding: 8px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.set-number {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+
+.icon-btn:hover {
+  opacity: 1;
+}
+
+.add-btn {
+  /* Ensure the add set button aligns correctly */
+  width: auto !important;
+  font-size: 1rem !important;
+  padding: 8px 15px !important;
+}
+
+/* Ensure form-input style is applied to the exercise name input */
+.form-input {
+  /* Ensure this class exists in your CSS with appropriate styles */
+}

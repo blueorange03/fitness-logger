@@ -42,7 +42,7 @@
   "jsonwebtoken": "^9.0.2",
   
     
-  "mongodb": "^6.20.0",
+  "mongodb": "^6.21.0",
   
     
   "recharts": "^3.3.0"
@@ -52,7 +52,15 @@
   "devDependencies": {
   
     
-  "nodemon": "^3.0.1"
+  "nodemon": "^3.1.11"
   
-  }
+  },
+  
+  "description": "",
+  
+  "keywords": [],
+  
+  "author": "",
+  
+  "license": "ISC"
 }
