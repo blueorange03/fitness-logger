@@ -403,3 +403,137 @@ input:focus {
 .form-input {
   /* Ensure this class exists in your CSS with appropriate styles */
 }
+
+/* --- Styles for Routines Page (to match iOS-like list view) --- */
+
+.routines-page {
+  padding: 0; /* Remove container padding for full width list look */
+  margin-top: -30px; /* Pull up closer to the Navbar */
+}
+
+.routines-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  /* Use app background color */
+  background: #222831; 
+  color: #F3F4F6;
+}
+
+.routines-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+  /* Override default h2 margin */
+  margin-left: 0 !important; 
+}
+
+.add-btn-round {
+  background: transparent;
+  color: #3b82f6; /* A common color for action buttons */
+  border: none;
+  font-size: 2rem;
+  font-weight: 300;
+  padding: 0;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.add-btn-round:hover {
+  color: #60a5fa;
+  background: transparent;
+}
+
+
+.routines-list-container {
+  /* Use the dark background from the card, but simplify the appearance */
+  background: #111827; /* Slightly lighter dark for the list background */
+  padding: 0;
+  margin: 20px 0;
+  border-radius: 10px;
+  overflow: hidden; /* Ensures borders/dividers don't bleed */
+}
+
+.routine-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  color: #F3F4F6;
+  font-size: 1.1rem;
+  cursor: pointer;
+  background: #111827;
+  transition: background 0.1s ease-in-out;
+  border-bottom: 1px solid #374151; /* Divider line */
+}
+
+.routine-item:last-child {
+  border-bottom: none; /* Remove divider for the last item */
+}
+
+.routine-item:hover {
+  background: #1f2937; /* Slight hover effect */
+}
+
+.chevron-icon {
+  color: #6b7280; /* Gray for the accessory arrow */
+  font-size: 0.9rem;
+}
+
+/* --- New Styles for RoutineDetails.jsx --- */
+
+.routines-header button.back-btn {
+  background: none;
+  border: none;
+  color: #3b82f6; /* Blue link color */
+  font-size: 1.1rem;
+  padding: 0;
+  cursor: pointer;
+}
+
+.routines-details-container {
+  /* Inherits from .routines-list-container but with padding for content */
+  background: #111827; 
+  padding: 0 20px; /* Add horizontal padding back */
+  margin: 20px 0;
+  border-radius: 10px;
+}
+
+.details-header {
+  display: grid;
+  grid-template-columns: 3fr 1fr 1fr 0.2fr; /* Name, Sets, Reps, Action */
+  gap: 10px;
+  font-weight: 600;
+  color: #9ca3af; 
+  padding: 15px 0 8px 0;
+  border-bottom: 1px solid #374151;
+}
+
+.exercise-detail-item {
+  display: grid;
+  grid-template-columns: 3fr 1fr 1fr 0.2fr;
+  gap: 10px;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #374151;
+  font-size: 1rem;
+}
+
+.exercise-detail-item:last-of-type {
+  border-bottom: none;
+}
+
+.ex-name {
+  font-weight: 500;
+  color: #F3F4F6;
+}
+
+.remove-btn-small {
+    color: #ef4444; 
+    opacity: 0.6;
+}
+
+.remove-btn-small:hover {
+    opacity: 1;
+}
