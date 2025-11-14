@@ -537,3 +537,16 @@ input:focus {
 .remove-btn-small:hover {
     opacity: 1;
 }
+
+
+.inline-row {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  width: 100%;
+  flex-wrap: wrap;
+}
+.inline-card {
+  flex: 1;
+  min-width: 280px;
+}
