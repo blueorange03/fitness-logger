@@ -15,7 +15,7 @@ export default function Workouts() {
   return (
     <div className="routines-page">
       <div className="routines-header">
-        <h1>Routines</h1> 
+        <h1>Workouts</h1> 
         <button className="add-btn-round">+</button> 
       </div>
       
