@@ -11,6 +11,7 @@ export default function Profile() {
           <p>Name: {user.name}</p>
           <p>SRN: {user.srn}</p>
           <p>Branch: {user.branch}</p>
+          
         </>
       ) : <p>Loading...</p>}
     </div>

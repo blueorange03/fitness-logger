@@ -1,6 +1,4 @@
-/* src/pages/Workouts.css */
 
-/* Using CSS from Login.css for consistency */
 @import url('./Login.css');
 
 .form-card {
@@ -8,7 +6,7 @@
   padding: 20px;
   border-radius: 12px;
   margin-bottom: 25px;
-  overflow: hidden; /* Fix for button float */
+  overflow: hidden; 
 }
 
 .form-card h3 {
@@ -18,7 +16,7 @@
 
 .form-input-no-icon {
   width: 100%;
-  padding: 15px 15px 15px 45px; /* Keep padding for icon */
+  padding: 15px 15px 15px 45px; 
   font-size: 1rem;
   background-color: var(--background); /* Slightly different input color */
   color: var(--text-primary);

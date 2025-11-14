@@ -12,10 +12,13 @@ const initialExercise = {
 
 export default function LogWorkout() {
   const [category, setCategory] = useState("");
+  const [bodyWeight, setBodyWeight] = useState("");
   const [exercises, setExercises] = useState([initialExercise]);
+
   const [startTime, setStartTime] = useState(null);
   const [duration, setDuration] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -32,15 +35,23 @@ export default function LogWorkout() {
   const handleStart = () => {
     setStartTime(new Date());
     setIsRunning(true);
-    setExercises(exercises.length > 0 ? exercises.map(ex => ({...ex, sets: ex.sets.map(s => ({...s, reps: "", weight: ""}))})) : [initialExercise]);
+
+    // Reset sets for all exercises
+    setExercises((prev) =>
+      prev.map((ex) => ({
+        ...ex,
+        sets: ex.sets.map((s) => ({ ...s, reps: "", weight: "" })),
+      }))
+    );
   };
 
   const handleStop = async () => {
     setIsRunning(false);
 
     if (!category) return alert("Please select a category");
+    if (!bodyWeight) return alert("Please enter your body weight");
     if (exercises.some((ex) => !ex.name))
-      return alert("Enter all exercise names");
+      return alert("Please enter all exercise names");
 
     const cleanedExercises = exercises.map((ex) => ({
       name: ex.name,
@@ -53,21 +64,29 @@ export default function LogWorkout() {
     }));
 
     const totalSets = cleanedExercises.reduce((sum, ex) => sum + ex.sets.length, 0);
-
-    if (totalSets === 0) return alert("Please log at least one set before saving.");
+    if (totalSets === 0)
+      return alert("Please log at least one valid set before saving.");
 
     try {
       await api.post("/workouts", {
         category,
         exercises: cleanedExercises,
-        duration: `${duration} min`,
-        date: startTime,
+        startTime,
+        endTime: new Date(),
+        duration,
+        bodyWeight: parseFloat(bodyWeight),
       });
+
+      await api.post("/weights", {
+        weight: parseFloat(bodyWeight),
+        date: new Date(),
+      });
+
       alert("✅ Workout saved successfully!");
       navigate("/workouts");
     } catch (err) {
       console.error("❌ Failed to save workout:", err);
-      alert("Failed to save workout. Check console for details.");
+      alert("Failed to save workout. Check console.");
     }
   };
 
@@ -107,9 +126,7 @@ export default function LogWorkout() {
     setExercises((prev) =>
       prev.map((ex, i) => {
         if (i === exIndex) {
-          if (ex.sets.length === 1) {
-            return ex;
-          }
+          if (ex.sets.length === 1) return ex;
           return {
             ...ex,
             sets: ex.sets.filter((_, j) => j !== setIndex),
@@ -120,39 +137,33 @@ export default function LogWorkout() {
     );
   };
 
-  const handleSetChange = useCallback(
-    (exIndex, setIndex, field, value) => {
-      setExercises((prev) =>
-        prev.map((ex, i) => {
-          if (i === exIndex) {
-            const newSets = ex.sets.map((set, j) => {
-              if (j === setIndex) {
-                return { ...set, [field]: value };
-              }
-              return set;
-            });
-            return { ...ex, sets: newSets };
-          }
-          return ex;
-        })
-      );
-    },
-    []
-  );
+  const handleSetChange = useCallback((exIndex, setIndex, field, value) => {
+    setExercises((prev) =>
+      prev.map((ex, i) => {
+        if (i === exIndex) {
+          const newSets = ex.sets.map((set, j) => {
+            if (j === setIndex) {
+              return { ...set, [field]: value };
+            }
+            return set;
+          });
+          return { ...ex, sets: newSets };
+        }
+        return ex;
+      })
+    );
+  }, []);
 
   return (
     <div className="card">
       <div className="log-header">
         <h3>Log Workout</h3>
-        <span className="duration">
-          {isRunning ? `⏱️ ${duration} min` : "Ready"}
-        </span>
+        <span className="duration">{isRunning ? `⏱️ ${duration} min` : "Ready"}</span>
       </div>
 
       <div className="form-group">
-        <label htmlFor="category">Category</label>
+        <label>Category</label>
         <select
-          id="category"
           value={category}
           onChange={(e) => setCategory(e.target.value)}
           className="form-input"
@@ -168,6 +179,19 @@ export default function LogWorkout() {
 
       <hr />
 
+      {/* BODY WEIGHT */}
+      <label>Body Weight (kg)</label>
+      <input
+        type="number"
+        value={bodyWeight}
+        onChange={(e) => setBodyWeight(e.target.value)}
+        className="form-input"
+        placeholder="Enter your body weight"
+        style={{ paddingLeft: "15px", width:"40px"}}
+      />
+
+      <hr />
+
       {exercises.map((ex, exIndex) => (
         <div key={exIndex} className="exercise-item-container card">
           <div
@@ -179,11 +203,9 @@ export default function LogWorkout() {
             }}
           >
             <input
-              placeholder={`Exercise ${exIndex + 1} Name (e.g., Bench Press)`}
+              placeholder={`Exercise ${exIndex + 1} Name`}
               value={ex.name}
-              onChange={(e) =>
-                handleExerciseNameChange(exIndex, e.target.value)
-              }
+              onChange={(e) => handleExerciseNameChange(exIndex, e.target.value)}
               className="form-input"
               style={{
                 width: "85%",
@@ -194,9 +216,8 @@ export default function LogWorkout() {
             />
             {exercises.length > 1 && (
               <button
-                type="button"
                 onClick={() => removeExercise(exIndex)}
-                className="add-btn"
+                className="icon-btn"
                 style={{
                   color: "#ef4444",
                   border: "1px dashed #ef4444",
@@ -218,6 +239,7 @@ export default function LogWorkout() {
           {ex.sets.map((set, setIndex) => (
             <div key={setIndex} className="set-row">
               <span className="set-number">Set {setIndex + 1}</span>
+
               <input
                 type="number"
                 placeholder="Reps"
@@ -226,6 +248,7 @@ export default function LogWorkout() {
                   handleSetChange(exIndex, setIndex, "reps", e.target.value)
                 }
               />
+
               <input
                 type="number"
                 placeholder="Weight"
@@ -234,11 +257,11 @@ export default function LogWorkout() {
                   handleSetChange(exIndex, setIndex, "weight", e.target.value)
                 }
               />
+
               <button
-                type="button"
                 onClick={() => removeSet(exIndex, setIndex)}
-                disabled={ex.sets.length === 1}
                 className="icon-btn"
+                disabled={ex.sets.length === 1}
               >
                 <FaTrashAlt style={{ color: "var(--text-secondary)" }} />
               </button>
@@ -246,7 +269,6 @@ export default function LogWorkout() {
           ))}
 
           <button
-            type="button"
             onClick={() => addSet(exIndex)}
             className="add-btn"
             style={{ marginTop: "10px" }}
@@ -257,7 +279,6 @@ export default function LogWorkout() {
       ))}
 
       <button
-        type="button"
         onClick={addExercise}
         className="add-btn"
         style={{ width: "100%", fontSize: "1.1rem", marginBottom: "20px" }}
@@ -273,7 +294,7 @@ export default function LogWorkout() {
             ▶️ Start Workout
           </button>
         ) : (
-          <button className="stop-btn" onClick={handleStop} disabled={!category}>
+          <button className="stop-btn" onClick={handleStop}>
             ⏹ Stop & Save Workout
           </button>
         )}
