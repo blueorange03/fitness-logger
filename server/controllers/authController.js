@@ -11,7 +11,6 @@ async function login(req, res) {
     const { username, password } = req.body;
     if (!username || !password) return res.status(400).json({ message: 'username/password required' });
 
-    // Call PESUAuth service
     const pesuResp = await axios.post(`${PESU_AUTH_URL}/authenticate`, { username, password, profile: true }, { timeout: 10000 });
     const pesuData = pesuResp.data;
 
@@ -19,7 +18,6 @@ async function login(req, res) {
 
     const profile = pesuData.profile || {};
     const db = await connect();
-    // Upsert user by SRN or PRN
     const filter = {};
     if (profile.srn) filter.srn = profile.srn;
     else if (profile.prn) filter.prn = profile.prn;
@@ -40,10 +38,8 @@ async function login(req, res) {
     const result = await db.collection('users').findOneAndUpdate(filter, update, opts);
     const user = result.value;
 
-    // Create our own JWT referencing our user _id
     const token = jwt.sign({ id: user._id.toString() }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
-    // Send cookie
     res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -65,7 +61,6 @@ async function logout(req, res) {
 
 async function me(req, res) {
   try {
-    // if auth middleware didn't run, check token quickly
     const token = req.cookies?.token || req.header('Authorization')?.replace('Bearer ', '');
     if (!token) return res.json({ user: null });
 

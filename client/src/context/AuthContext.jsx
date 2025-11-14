@@ -17,7 +17,7 @@ export function AuthProvider({ children }) {
   async function fetchUser() {
     try {
       const res = await api.get("/auth/me");
-      console.log("✅ fetchUser -> user:", res.data.user);
+      console.log("fetchUser -> user:", res.data.user);
       dispatch({ type: "SET_USER", payload: res.data.user });
     } catch (err) {
       console.error("fetchUser failed:", err?.response?.data || err.message);

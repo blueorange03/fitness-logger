@@ -31,7 +31,7 @@ async function connectDB() {
   const client = new MongoClient(process.env.MONGO_URI);
   await client.connect();
   db = client.db();
-  console.log("✅ MongoDB connected");
+  console.log("MongoDB connected");
 }
 connectDB().catch(console.error);
 
@@ -149,7 +149,4 @@ app.post("/api/workouts", auth, async (req, res) => {
   }
 });
 
-
-
-// Start server
 app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
