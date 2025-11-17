@@ -51,7 +51,7 @@
 
 .form-input {
   width: 100%;
-  padding: 15px 15px 15px 45px; /* Left padding for icon */
+  padding: 15px 15px 15px 45px; 
   font-size: 1rem;
   background-color: var(--card-bg);
   color: var(--text-primary);

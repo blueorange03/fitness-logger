@@ -1,4 +1,3 @@
-/* --- General Card Styles --- */
 .card {
   background-color: var(--card-bg);
   border-radius: 12px;
@@ -21,7 +20,6 @@
   margin-bottom: 20px;
 }
 
-/* --- Log Card Styles (for LogWorkout.jsx) --- */
 .log-header {
   display: flex;
   justify-content: space-between;
@@ -58,7 +56,6 @@
   margin-top: 5px;
 }
 
-/* --- Statistics/Dashboard Card Styles --- */
 .leaderboard-item {
   display: flex;
   align-items: center;

@@ -29,7 +29,6 @@ export function AuthProvider({ children }) {
 
   async function login(username, password) {
     await api.post("/auth/login", { username, password });
-    // fetchUser will set user and loading false (ensure cookie is set by backend)
     await fetchUser();
   }
 

@@ -20,10 +20,8 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           
-          {/* /workouts is now the list of routines (Push/Pull/Legs) */}
           <Route path="/workouts" element={<ProtectedRoute><Workouts /></ProtectedRoute>} /> 
           
-          {/* /routines now handles the base path and the dynamic routine detail path */}
           <Route path="/routines" element={<ProtectedRoute><Routines /></ProtectedRoute>} />
           <Route path="/routines/:routineName" element={<ProtectedRoute><Routines /></ProtectedRoute>} /> 
           

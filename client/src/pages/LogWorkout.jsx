@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import api from "../api";
 import { useNavigate } from "react-router-dom";
 import { FaTrashAlt, FaPlusCircle } from "react-icons/fa";
+import "./LogWorkout.css"; // 1. IMPORT THE NEW CSS FILE
 
 const initialSet = { reps: "", weight: "" };
 
@@ -185,9 +186,10 @@ export default function LogWorkout() {
         type="number"
         value={bodyWeight}
         onChange={(e) => setBodyWeight(e.target.value)}
-        className="form-input"
+        className="form-input" // This now gets the correct styles
         placeholder="Enter your body weight"
-        style={{ paddingLeft: "15px", width:"40px"}}
+        // 2. UPDATED INLINE STYLE
+        style={{ paddingLeft: "15px", width: "200px" }}
       />
 
       <hr />
@@ -212,6 +214,7 @@ export default function LogWorkout() {
                 fontWeight: "600",
                 fontSize: "1.1rem",
                 paddingLeft: "15px",
+                marginBottom: 0, // No margin needed here
               }}
             />
             {exercises.length > 1 && (
@@ -244,6 +247,8 @@ export default function LogWorkout() {
                 type="number"
                 placeholder="Reps"
                 value={set.reps}
+                // 3. ADDED CLASSNAME
+                className="form-input"
                 onChange={(e) =>
                   handleSetChange(exIndex, setIndex, "reps", e.target.value)
                 }
@@ -253,6 +258,8 @@ export default function LogWorkout() {
                 type="number"
                 placeholder="Weight"
                 value={set.weight}
+                // 3. ADDED CLASSNAME
+                className="form-input"
                 onChange={(e) =>
                   handleSetChange(exIndex, setIndex, "weight", e.target.value)
                 }

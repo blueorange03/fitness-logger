@@ -1,0 +1,157 @@
+/* General styles for the LogWorkout component */
+.log-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.log-header h3 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.duration {
+  font-weight: 600;
+  color: #60a5fa; /* Blue to match other accents */
+}
+
+/* This is the single most important class.
+  It overrides the broken global 'input' style from index.css.
+*/
+.form-input {
+  width: 100%;
+  padding: 10px 15px;
+  border-radius: 6px;
+  border: 1px solid #3b82f6;
+  background-color: #111827;
+  color: white;
+  font-size: 1rem;
+  box-sizing: border-box; /* Important for grid/flex layouts */
+  margin-bottom: 10px; /* Re-adds margin */
+  text-align: left; /* Overrides global 'text-align: center' */
+}
+
+/* Specific styles for the exercise card */
+.exercise-item-container {
+  background: #0f172a; /* Darker card-in-card look from your image */
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px !important; /* !important to override .card margin */
+  border: 1px solid #374151; /* Subtle border */
+}
+
+.set-row-header {
+  display: grid;
+  /* Adjusted grid to match image (Set, Reps, Weight, Action) */
+  grid-template-columns: 0.8fr 1fr 1fr 0.5fr;
+  gap: 10px;
+  font-weight: 600;
+  color: #9ca3af; /* Secondary text color */
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #374151;
+  align-items: center;
+}
+
+.set-row {
+  display: grid;
+  /* This MUST match the header's grid */
+  grid-template-columns: 0.8fr 1fr 1fr 0.5fr;
+  gap: 10px;
+  margin-bottom: 10px;
+  align-items: center;
+}
+
+/* Style the inputs inside the set row */
+.set-row .form-input {
+  text-align: center; /* Center text for Reps and Weight */
+  padding: 8px; /* Slightly smaller for rows */
+  margin-bottom: 0; /* No extra margin needed in the row */
+}
+
+.set-number {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  color: #f3f4f6;
+}
+
+/* Button for deleting sets/exercises */
+.icon-btn {
+  background: none;
+  border: none;
+  color: #9ca3af; /* Secondary text */
+  cursor: pointer;
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+
+.icon-btn:hover {
+  opacity: 1;
+  color: #ef4444; /* Red on hover */
+}
+
+.icon-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  color: #9ca3af;
+}
+
+.add-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: 1px dashed #3b82f6;
+  color: #3b82f6;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.add-btn:hover {
+  background: #3b82f6;
+  color: white;
+}
+
+/* Start/Stop buttons */
+.start-btn,
+.stop-btn {
+  width: 100%;
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+}
+
+.start-btn {
+  background: #16a34a;
+  color: white;
+}
+.start-btn:hover {
+  background: #15803d;
+}
+
+.stop-btn {
+  background: #ef4444;
+  color: white;
+}
+.stop-btn:hover {
+  background: #dc2626;
+}
+
+/* Utility for horizontal rule */
+hr {
+  border: none;
+  border-top: 1px solid #374151;
+  margin: 20px 0;
+}

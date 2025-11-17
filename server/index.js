@@ -1,4 +1,3 @@
-// server/index.js
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -12,7 +11,6 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Load .env
 dotenv.config({ path: path.join(__dirname, ".env") });
 
 console.log("MONGO_URI:", process.env.MONGO_URI);
@@ -21,7 +19,6 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 let db;
 
-// Middleware
 app.use(express.json());
 app.use(cookieParser());
 app.use(
@@ -31,7 +28,6 @@ app.use(
   })
 );
 
-// Connect MongoDB
 async function connectDB() {
   const client = new MongoClient(process.env.MONGO_URI);
   await client.connect();
@@ -40,7 +36,6 @@ async function connectDB() {
 }
 connectDB().catch(console.error);
 
-// AUTH MIDDLEWARE (correct version)
 async function auth(req, res, next) {
   try {
     const token =
@@ -62,7 +57,6 @@ async function auth(req, res, next) {
   }
 }
 
-// ---------- AUTH ROUTES ----------
 app.post("/api/auth/login", async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -133,9 +127,7 @@ app.post("/api/auth/logout", (req, res) => {
   res.json({ message: "Logged out" });
 });
 
-// ---------- WEIGHT ROUTES ----------
 
-// Save weight
 app.post("/api/weights", auth, async (req, res) => {
   try {
     const { weight, date } = req.body;
@@ -156,7 +148,6 @@ app.post("/api/weights", auth, async (req, res) => {
   }
 });
 
-// Get weight history
 app.get("/api/weights", auth, async (req, res) => {
   const weights = await db
     .collection("weights")
@@ -167,7 +158,6 @@ app.get("/api/weights", auth, async (req, res) => {
   res.json({ weights });
 });
 
-// Get latest weight
 app.get("/api/weights/latest", auth, async (req, res) => {
   const latest = await db
     .collection("weights")
@@ -179,9 +169,6 @@ app.get("/api/weights/latest", auth, async (req, res) => {
   res.json({ weight: latest[0] || null });
 });
 
-// ---------- WORKOUT ROUTES ----------
-
-// Fetch workouts
 app.get("/api/workouts", auth, async (req, res) => {
   const workouts = await db
     .collection("workouts")
@@ -192,7 +179,6 @@ app.get("/api/workouts", auth, async (req, res) => {
   res.json({ workouts });
 });
 
-// Save workout
 app.post("/api/workouts", auth, async (req, res) => {
   try {
     const {
@@ -228,7 +214,6 @@ app.post("/api/workouts", auth, async (req, res) => {
   }
 });
 
-// START SERVER
 app.listen(PORT, () =>
   console.log(`✅ Server running on port ${PORT}`)
 );

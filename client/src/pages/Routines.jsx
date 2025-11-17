@@ -2,7 +2,6 @@ import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { FaTrashAlt } from "react-icons/fa";
 
-// Mock data for the exercises (moved from old RoutineDetails.jsx)
 const mockRoutineData = {
   "Full Body": [
     { id: 1, name: "Barbell Squat", sets: "3-4", reps: "6-8" },

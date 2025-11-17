@@ -17,9 +17,8 @@ export default function WorkoutStatistics() {
   const [workouts, setWorkouts] = useState([]);
   const [weightHistory, setWeightHistory] = useState([]);
   const [range, setRange] = useState(12);
-  const [view, setView] = useState("heatmap"); // NEW: toggle heatmap <-> weight graph
+  const [view, setView] = useState("heatmap"); 
 
-  // these match LogWorkout.jsx options
   const [chartType, setChartType] = useState("frequency");
   const [categoryFilter, setCategoryFilter] = useState("all");
 
@@ -36,19 +35,16 @@ export default function WorkoutStatistics() {
   const endDate = new Date();
   const startDate = subMonths(endDate, range);
 
-  // FILTER WORKOUTS BY DATE
   const filtered = workouts.filter((w) => {
     const d = new Date(w.startTime);
     return d >= startDate && d <= endDate;
   });
 
-  // FILTER BY CATEGORY
   const filteredByCategory =
     categoryFilter === "all"
       ? filtered
       : filtered.filter((w) => w.category === categoryFilter);
 
-  // BUILD HEATMAP DATA
   const dateMap = {};
 
   filteredByCategory.forEach((w) => {
@@ -79,7 +75,6 @@ export default function WorkoutStatistics() {
     return { date: v.date, count: intensity };
   });
 
-  // WEIGHT GRAPH DATA
   const weightGraphData = weightHistory.map((w) => ({
     date: format(new Date(w.date), "MM-dd"),
     weight: w.weight,
@@ -88,10 +83,9 @@ export default function WorkoutStatistics() {
   return (
     <div className="card heatmap-container">
       <h2 style={{ textAlign: "center", marginBottom: "10px" }}>
-        📊 Workout Statistics
+        Workout Statistics
       </h2>
 
-      {/* VIEW SELECTOR */}
       <div style={{ display: "flex", gap: "10px", marginBottom: "15px" }}>
         <select value={view} onChange={(e) => setView(e.target.value)}>
           <option value="heatmap">Heatmap</option>
@@ -117,7 +111,6 @@ export default function WorkoutStatistics() {
               onChange={(e) => setCategoryFilter(e.target.value)}
             >
               <option value="all">All</option>
-              {/* THESE match your LogWorkout categories */}
               <option value="Strength">Strength</option>
               <option value="Cardio">Cardio</option>
               <option value="Hybrid">Hybrid</option>
@@ -127,7 +120,6 @@ export default function WorkoutStatistics() {
         )}
       </div>
 
-      {/* CONDITIONAL RENDER */}
       {view === "heatmap" ? (
         <>
           <CalendarHeatmap
@@ -152,7 +144,6 @@ export default function WorkoutStatistics() {
           />
         </>
       ) : (
-        // WEIGHT CHART
         <div style={{ width: "100%", height: "300px" }}>
           <ResponsiveContainer>
             <LineChart data={weightGraphData}>

@@ -8,7 +8,6 @@ export default function Workouts() {
   const routines = ["Full Body", "Legs", "Pull", "Push"];
 
   const handleRoutineClick = (name) => {
-    // Navigate to the Routines page, passing the routine name as a URL parameter
     navigate(`/routines/${encodeURIComponent(name)}`);
   };
 
