@@ -33,20 +33,15 @@ const mockRoutineData = {
   ],
 };
 
-// This component is now the ROUTINE DETAILS page.
 export default function Routines() {
   const { routineName } = useParams();
   const navigate = useNavigate();
 
-  // If routineName is missing (e.g., navigated directly to /routines), redirect to list.
   if (!routineName) {
-    // If the path is just /routines, push them back to the list page (/workouts)
-    // NOTE: For simplicity, we are redirecting. You could also display a "no routine selected" message.
     navigate('/workouts');
     return null; 
   }
 
-  // Decode the URL parameter and capitalize it for lookup
   const key = decodeURIComponent(routineName).split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 
   const exercises = mockRoutineData[key] || [];
